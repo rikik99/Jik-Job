@@ -12,10 +12,16 @@ import com.green.users.mapper.UserMapper;
 import com.green.users.resume.domain.ResumeVo;
 import com.green.users.resume.mapper.ResumeMapper;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+
 @Controller
 @RequestMapping("/Users")
 public class UserController {
 
+	
+
+	
 	@Autowired
 	private ResumeMapper resumeMapper;
 	@Autowired
@@ -71,12 +77,30 @@ public class UserController {
 	
 	}
 	@RequestMapping("/InfoUpdate")
-	public  ModelAndView  infoUpdate(UserVo userVo) {
+	public  ModelAndView  PupdateInfo(UserVo userVo) {
 		userMapper.PupdateInfo(userVo);
-		ModelAndView   mv  =  new ModelAndView();
-		String User=userVo.getUser();
-		mv.setViewName("user/infoedit");
+        ModelAndView   mv   =  new  ModelAndView();
+        String user_id = userVo.getUser_id();
+        mv.setViewName("redirect:/Users/Info?user_id="+ user_id);
 		return mv;
 	}
-	
+    @RequestMapping("/InfoDelete")
+    public  ModelAndView  InfoDelete(UserVo userVo,HttpServletRequest request){
+       userMapper.PInfoDelete( userVo );
+       //세션무효화
+       request.getSession().invalidate();
+       
+       ModelAndView   mv   =  new  ModelAndView();
+       mv.setViewName("/home");
+       return   mv;
+    }
 }
+	
+
+	
+	
+	
+    
+
+
+

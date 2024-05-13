@@ -73,47 +73,52 @@
 
    <!-- 페이지 내용 -->
    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+   	<form action="/Users/InfoUpdate">
       <div class="col-sm-9 page">
-
          <div class="jh_resume_flexbox mt-3">
             <img src="/img/wife.jpg" id="imagePreview"
                style="width: 200px; height: 250px; display: flex; justify-content: center; align-items: center;
                      margin-left: auto; margin-right: auto;"
                class="mb-2 border border-tertiary">
-			
-
-			
 			<div class="form-floating mb-3">
                <label for="floatingInput">이름</label> <input type="text"
-                  class="form-control" id="floatingInput" value="${ vo.user_name }" >
+                  class="form-control" id="floatingInput" name = "user_name" value="${ vo.user_name }" >
             </div>
             <div class="form-floating mb-3">
                <label for="floatingInput">이메일</label> <input type="email"
-                  class="form-control" id="floatingInput" value="${ sessionScope.plogin.user_id }"
+                  class="form-control" id="floatingInput" name="user_id" value="${ sessionScope.plogin.user_id }"readonly>
+            </div>
+           <div class="form-floating mb-3">
+               <label for="floatingInput">비밀번호</label> <input type="password"
+                  class="form-control" id="floatingInput"  name = "user_pw"value="${ sessionScope.plogin.user_pw }"
                   >
             </div>
             <div class="form-floating mb-3">
                <label for="floatingInput">전화번호</label> <input type="text"
-                  class="form-control" id="floatingInput" value="${vo.user_tell }" >
+                  class="form-control" id="floatingInput" name = "user_tell" value="${vo.user_tell }" >
             </div>
             <div class="form-floating mb-3">
                <label for="floatingInput">주소</label> <input type="text"
-                  class="form-control" id="floatingInput" value="${vo.user_adr }" >
+                  class="form-control" id="floatingInput" name = "user_adr" value="${vo.user_adr }" >
             </div>
             <div class="form-floating mb-3">
                <label for="floatingInput">생년월일</label> <input type="text"
-                  class="form-control" id="floatingInput" value="${vo.user_birth }" >
+                  class="form-control" id="floatingInput" name = "user_birth"  value="${vo.user_birth }" >
             </div>
-
+            
+			<input type = "hidden" name = "user_date"  >
+			
             <div class="flex-container">
-               <button type="button" class="btn"
-                  style="background-color: #5215a6; color: white; border: white;"
-                  onClick="location.href='/Users/InfoUpdate?user_id=${ sessionScope.plogin.user_id}class'">수정완료</button> <!-- 수정 페이지 만들고 연결 -->
+               <button type="submit" class="btn"
+                  style="background-color: #5215a6; color: white; border: white;">수정완료</button> <!-- 수정 페이지 만들고 연결 -->
                <button type="button" class="btn"
                   style="background-color: #5215a6; color: white; border: white;"
                   onClick="location.href='/Users/Info?user_id=${ sessionScope.plogin.user_id}class'">취소</button> <!-- 회원탈퇴 페이지 만들고 연결 -->
             </div>
          </div>
+         </div>
+      </form>
+     
          <!-- 내용 추가 -->
    </main>
 

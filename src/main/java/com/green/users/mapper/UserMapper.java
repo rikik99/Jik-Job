@@ -22,7 +22,12 @@ public interface UserMapper {
 
 	UserVo Pgetedituser(UserVo userVo);
 
-	UserVo PupdateInfo(UserVo userVo);
+	void PupdateInfo(UserVo userVo);
+
+	void PInfoDelete(UserVo userVo);
+
+
+
 	
 	
 
