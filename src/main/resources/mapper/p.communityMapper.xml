@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.community.mapper.P_CommunityMapper">
+	<select id="getPBoardPagingList">
+		SELECT  
+    	    UCM.UCOMU_BNO
+    	  , UCM.UCOMU_TITLE 
+    	  , UCM.USER_ID    	  
+    	  , UCM.UCOMU_HIT
+    	  , UCM.UCOMU_DATE
+    FROM  
+     		  U_COMMUNITY UCM
+   
+    ORDER BY  ucomu_bno DESC
+	</select>
+	<select id="getMycommunityVo">
+		SELECT  
+    	    UCM.UCOMU_BNO
+    	  , UCM.UCOMU_TITLE 
+    	  , UCM.USER_ID    	  
+    	  , UCM.UCOMU_HIT
+    	  , UCM.UCOMU_DATE
+    FROM  
+     		  U_COMMUNITY UCM
+   WHERE UCM.USER_ID = #{user_id}
+   ORDER BY  ucomu_bno DESC
+	</select>
+	<select id="getcommunityVo">	
+		SELECT  
+    	    UCM.ucomu_bno
+    	  , UCM.ucomu_title 
+    	  , UCM.user_ID    	
+    	  , UCM.uCOMU_CONTENT  
+    	  , UCM.uCOMU_HIT
+    	  , UCM.uCOMU_DATE
+    	  
+    FROM  
+     		  U_COMMUNITY UCM
+   	WHERE 
+    	UCM.UCOMU_BNO = #{ucomu_bno}
+	</select>
+	
+	<select id="getPBoardCommentList">
+		SELECT  
+    	   UMM.UCOMU_BNO
+        ,UMM.UCOMM_ID
+        ,UMM.UCOMM_BODY
+        ,UMM.USER_ID
+        ,UMM.UCOMU_GOOD
+    FROM  
+     		  U_COMMENTS UMM
+   	WHERE 
+    	UMM.UCOMU_BNO = #{ucomu_bno}
+    order by 
+        UCOMM_ID asc
+	</select>
+	
+	<update id="incHit">
+    	UPDATE U_COMMUNITY
+    	SET UCOMU_HIT = ucomu_hit + 1
+    	WHERE ucomu_bno = #{ucomu_bno} 
+    </update>
+	
+	<insert id="insertBoard">
+		 INSERT INTO U_COMMUNITY (
+     UCOMU_BNO
+    ,UCOMU_TITLE
+    ,UCOMU_CONTENT
+    ,USER_ID
+)   VALUES (
+    ( SELECT (NVL(MAX(UCOMU_BNO), 0)+1) FROM U_COMMUNITY ),
+    #{ ucomu_title },
+    #{ ucomu_content },
+    #{ user_id }   
+)
+	</insert>
+	<insert id="insertComment">
+		insert into U_COMMENTS(
+		    UCOMU_BNO,
+		    UCOMM_ID,
+		    UCOMM_BODY,
+		    USER_ID,
+		   	UCOMU_GOOD
+		)
+		values (
+		    #{ucomu_bno},
+		    (SELECT (NVL(MAX(UCOMM_ID), 0)+1) FROM U_COMMENTS ),
+		    #{ucomm_body},
+		    #{user_id},
+		    0 
+		)
+	</insert>
+<!-- 현재 사용자가 댓글에 좋아요를 눌렀는지 확인 -->
+   <select id="isCommentLiked" resultType="int">
+		    SELECT COUNT(*)
+		    FROM U_COMMENTS_LIKE
+		    WHERE UCOMU_BNO = #{ucomu_bno} AND UCOMM_ID = #{ucomm_id} AND USER_ID = #{user_id}
+		</select>
+   
+   <!-- 댓글의 좋아요 수 증가 -->
+   <update id="incrementLikeCount">
+	    UPDATE U_COMMENTS
+	    SET UCOMU_GOOD = UCOMU_GOOD + 1
+	    WHERE UCOMU_BNO = #{ucomu_bno} AND UCOMM_ID = #{ucomm_id}
+	</update>
+   
+   <!-- 댓글의 좋아요 수 감소 -->
+   <update id="decrementLikeCount">
+       UPDATE U_COMMENTS
+       SET UCOMU_GOOD = ucomu_good - 1
+       WHERE UCOMU_BNO = #{ucomu_bno} AND UCOMM_ID = #{ucomm_id}
+   </update>
+   
+   <!-- 사용자가 댓글에 좋아요를 눌렀음을 기록 -->
+   <insert id="addCommentLike">
+    INSERT INTO U_COMMENTS_LIKE (COMMENT_LIKE_BNO, UCOMU_BNO, UCOMM_ID, USER_ID)
+    VALUES (
+    (SELECT (NVL(MAX(COMMENT_LIKE_BNO), 0)+1) FROM U_COMMENTS_LIKE ),
+    #{ucomu_bno}, #{ucomm_id}, #{user_id})
+	</insert>
+   
+   <!-- 사용자가 댓글에 눌렀던 좋아요를 취소 -->
+   <delete id="removeCommentLike">
+	    DELETE FROM U_COMMENTS_LIKE
+	    WHERE UCOMU_BNO = #{ucomu_bno} AND UCOMM_ID = #{ucomm_id} AND USER_ID = #{user_id}
+	</delete>
+	<!-- 본인 게시물 업데이트 -->
+	<update id="updateBoard">
+		 UPDATE  U_COMMUNITY
+     SET    UCOMU_TITLE    =  #{ucomu_title},
+            UCOMU_CONTENT   =  #{ucomu_content}
+     WHERE  UCOMU_BNO      =  #{ucomu_bno}
+	</update>
+	<delete id="deleteBoard">
+	  DELETE U_COMMUNITY
+	  WHERE UCOMU_BNO = #{ucomu_bno}
+	</delete>
+	<delete id="deleteComment">
+		DELETE C_COMMENTS
+	  WHERE CCOMM_ID = #{ccomm_id}
+	</delete>
+</mapper>

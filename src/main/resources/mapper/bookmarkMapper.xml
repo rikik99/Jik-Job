@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.bookmark.mapper.BookmarkMapper">
+ 
+
+  <select id="getUserBook" resultType="com.green.bookmark.domain.UserBookVo">
+    SELECT
+      PO_NUM,
+      USER_ID,
+      UB_NUM,
+      UB_BOOLEAN
+    FROM
+      USERBOOK
+    WHERE
+      USER_ID = #{ arg0 }
+    AND
+      PO_NUM = #{ arg1 }
+  </select>
+  
+  
+  <select id="checkUBNO" resultType="int">
+    SELECT
+      COUNT(*)
+    FROM
+      USERBOOK
+    WHERE
+      USER_ID = #{ arg0 }
+    AND
+      PO_NUM = #{ arg1 }
+  </select>
+  
+
+  <insert id="insertUserbook">
+    INSERT INTO USERBOOK (
+      PO_NUM,
+      USER_ID,
+      UB_NUM,
+      UB_BOOLEAN
+    )
+    VALUES (
+      #{ arg1 },
+      #{ arg0 },
+      NVL((SELECT MAX(UB_NUM) FROM USERBOOK), 0) + 1,
+      0
+    )
+  </insert>
+  
+  
+  <delete id="deleteUserbook">
+    DELETE
+      USERBOOK
+    WHERE
+      USER_ID = #{ arg0 }
+    AND
+      PO_NUM = #{ arg1 }
+  </delete>
+  
+  
+  <select id="getComBook" resultType="com.green.bookmark.domain.ComBookVo">
+    SELECT
+      RE_NUM,
+      COM_ID,
+      CB_NUM
+    FROM
+      COMBOOK
+    WHERE
+      COM_ID = #{ arg0 }
+    AND
+      RE_NUM = #{ arg1 }
+  </select>
+  
+  
+  <insert id="insertComBook">
+    INSERT INTO COMBOOK (
+      RE_NUM,
+      COM_ID,
+	  CB_NUM
+	)
+    VALUES (
+      #{ arg1 },
+      #{ arg0 },
+      NVL((SELECT MAX(CB_NUM) FROM COMBOOK), 0) + 1
+    )
+  </insert>
+  
+  
+  <delete id="deleteComBook">
+    DELETE
+      COMBOOK
+    WHERE
+      RE_NUM = #{ arg1 }
+    AND
+      COM_ID = #{ arg0 }
+  </delete>
+  
+  
+      
+</mapper>

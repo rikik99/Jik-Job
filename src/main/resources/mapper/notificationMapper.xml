@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.notification.mapper.NotificationMapper">
+
+  <!-- 안읽음 상태인 알림 수 조회 -->
+  <select id="getUnreadNotificationsByUserId" 
+  		  parameterType="String" resultType="com.green.notification.domain.NotificationVo">
+    SELECT *
+    FROM
+      NOTIFICATIONS
+    WHERE
+      USER_ID = #{ user_id }
+    AND
+      ISREAD = 0
+  </select>
+  
+  <select id="getReadNotificationsByUserId" 
+  		  parameterType="String" resultType="com.green.notification.domain.NotificationVo">
+    SELECT *
+    FROM
+      NOTIFICATIONS
+    WHERE
+      USER_ID = #{ user_id }
+    AND
+      ISREAD = 1
+  </select>
+  
+  <update id="deleteNotification">
+    UPDATE NOTIFICATIONS
+	SET  
+	  ISREAD = 1
+	WHERE 
+	  USER_ID = #{ arg0 }
+	AND
+	  RE_NUM = #{ arg1 }
+	AND
+	  PO_NUM = #{ arg2 }
+  </update>
+  
+  <insert id="insertNotification" parameterType="java.util.Map">
+    INSERT INTO notifications (
+      NO_ID,
+      USER_ID,
+      COM_ID,
+      RE_NUM,
+      PO_NUM,
+      ISREAD,
+      CREATED_AT
+      )
+    VALUES (
+      NVL((SELECT MAX(NO_ID) FROM NOTIFICATIONS), 0) + 1,
+      #{ user_id },
+      #{ com_id },
+      #{ re_num },
+      #{ po_num },
+      #{ isRead },
+      CURRENT_TIMESTAMP
+      )
+  </insert>
+  
+  <select id="KgetUserInfo">
+    SELECT *
+    FROM
+      USERS U, RESUME R
+    WHERE
+      U.USER_ID = R.USER_ID
+    AND
+      R.RE_NUM = #{ re_num }
+  </select>
+  
+
+</mapper>

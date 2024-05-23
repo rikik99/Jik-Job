@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.users.resume.mapper.ResumeMapper">
+	<select id="LgetResumeList">
+		SELECT
+			RE_NUM,
+			USER_ID,
+			RE_TITLE,
+			SKILL,
+			CAREER,
+			REGION,
+			USER_EDU,
+			USER_CAR,
+			USER_INTRO,
+			USER_IMG
+		FROM
+			RESUME
+		WHERE
+			USER_ID = #{ user_id }
+	</select>
+	<insert id="LinsertResume">
+		INSERT INTO RESUME (
+		RE_NUM,
+		USER_ID,
+		RE_TITLE,
+		SKILL,
+		CAREER,
+		REGION,
+		USER_EDU,
+		USER_CAR,
+		USER_INTRO,
+		USER_IMG
+		)
+		VALUES (
+		(SELECT NVL(MAX(RE_NUM), 0)+1 FROM RESUME ),
+		#{ user_id },
+		#{ re_title },
+		#{ skill },
+		#{ career },
+		#{ region },
+		#{ user_edu },
+		#{ user_car },
+		#{user_intro },
+		#{user_img }
+		)
+    
+     </insert>
+     
+     <select   id="LgetResumes" >
+    	SELECT  
+			RE_NUM,
+			USER_ID,
+			RE_TITLE,
+			SKILL,
+			CAREER,
+			REGION,
+			USER_EDU,
+			USER_CAR,
+			USER_INTRO,
+			USER_IMG
+    	 FROM  
+           RESUME
+         WHERE
+           RE_NUM = #{ re_num }
+     </select>
+      <update id="LResumeUpdate">
+      	UPDATE RESUME
+		SET  
+			RE_NUM = #{re_num},
+			USER_ID= #{user_id},
+			RE_TITLE = #{re_title},
+			SKILL = #{skill},
+			CAREER = #{career},
+			REGION = #{region},
+			USER_EDU = #{user_edu},
+			USER_CAR = #{user_car},
+			USER_INTRO = #{user_intro}
+		  WHERE 
+			USER_ID = #{user_id}
+			AND RE_NUM = #{re_num}
+		</update>
+		
+		<delete id="LResumeDelete">
+		DELETE  
+  		FROM RESUME
+			WHERE RE_NUM = #{re_num}
+		</delete>
+		
+	<select id="KgetResumeList" resultType="com.green.users.resume.domain.ResumeVo">
+  	  SELECT 
+  	    RE_NUM,
+		USER_ID,
+		RE_TITLE,
+		SKILL,
+		CAREER,
+		REGION,
+		USER_EDU,
+		USER_CAR,
+		USER_INTRO,
+		USER_IMG
+  	  FROM
+  	    RESUME
+  	  WHERE
+  	    USER_ID = #{ user_id }
+  	  ORDER BY RE_NUM ASC
+  </select>
+  
+  <select id="KmakeResumeList" resultType="com.green.users.resume.domain.ResumeVo">
+    SELECT  
+      R.RE_NUM,
+      R.USER_ID,
+      R.RE_TITLE,
+      R.SKILL,
+      R.CAREER,
+      R.REGION,
+      R.USER_EDU,
+      R.USER_CAR,
+      R.USER_INTRO,
+      R.USER_IMG,
+      U.USER_NAME,
+      U.USER_TELL,
+      U.USER_BIRTH,
+      U.USER_ADR,
+      UR.RATING
+    FROM  
+      RESUME R
+    JOIN
+      USERS U
+    ON
+      R.USER_ID = U.USER_ID
+    LEFT JOIN
+      USERRATINGS UR
+    ON
+      R.USER_ID = UR.USER_ID
+    ORDER BY
+      R.RE_NUM ASC
+  </select>
+  
+  
+  <select id="KmakeResumeView">
+    SELECT  
+      R.RE_NUM,
+      R.USER_ID,
+      R.RE_TITLE,
+      R.SKILL,
+      R.CAREER,
+      R.REGION,
+      R.USER_EDU,
+      R.USER_CAR,
+      R.USER_INTRO,
+      R.USER_IMG,
+      U.USER_NAME,
+      U.USER_TELL,
+      U.USER_BIRTH,
+      U.USER_ADR
+	FROM
+	  RESUME R
+	JOIN
+	  USERS U
+	ON
+	  R.USER_ID = U.USER_ID 
+	WHERE
+	  RE_NUM = #{ arg1 }
+  </select>
+  
+  
+  <select id="KgetRating">
+	  SELECT
+	    RATING
+	  FROM
+	    (
+	      SELECT
+	        RATING
+	      FROM
+	        USERRATINGS
+	      WHERE
+	    	USER_ID = #{ arg0 }
+	  	  AND
+	    	COM_ID = #{ arg1 }
+	  	  ORDER BY
+	    	RATING_ID ASC
+	    )
+	  WHERE
+	    ROWNUM = 1
+	</select>
+	
+	<insert id="KaddRating">
+	  INSERT
+	    INTO USERRATINGS (
+	    COM_ID,
+	    USER_ID,
+	    RATING_ID,
+	    RATING
+	  )
+	  VALUES (
+	    #{ arg0 },
+	    #{ arg1 },
+	    NVL((SELECT MAX(RATING_ID) FROM USERRATINGS), 0) + 1,
+	    #{ arg2 }
+	  )
+	</insert>
+	
+	<update id="KupdateRating">
+	  UPDATE
+	    USERRATINGS
+	  SET
+	    RATING = #{ arg2 }
+	  WHERE
+	    USER_ID = #{ arg1 }
+	  AND
+	    COM_ID = #{ arg0 }
+	</update>
+  
+	<select id="KgetResumeBookList">
+	  SELECT
+	    R.RE_NUM,
+		R.USER_ID,
+		R.RE_TITLE,
+		R.SKILL,
+		R.CAREER,
+		R.REGION,
+		R.USER_EDU,
+		R.USER_CAR,
+		R.USER_INTRO,
+		R.USER_IMG,
+		U.USER_NAME
+	  FROM
+	    RESUME R
+	  JOIN
+	    COMBOOK CB ON R.RE_NUM = CB.RE_NUM
+	  JOIN
+	    USERS U ON R.USER_ID = U.USER_ID
+	  WHERE
+	    CB.COM_ID = #{ arg1 }
+	</select>
+	
+	<select id="KgetResume">
+		SELECT
+			RE_NUM,
+			USER_ID,
+			RE_TITLE,
+			SKILL,
+			CAREER,
+			REGION,
+			USER_EDU,
+			USER_CAR,
+			USER_INTRO,
+			USER_IMG
+		FROM
+			RESUME
+		WHERE
+			USER_ID = #{ user_id }
+		AND
+	    	ROWNUM = 1
+	</select>
+	
+	<select id="KgetResumeInfo">
+	  SELECT
+			RE_NUM,
+			USER_ID,
+			RE_TITLE,
+			SKILL,
+			CAREER,
+			REGION,
+			USER_EDU,
+			USER_CAR,
+			USER_INTRO,
+			USER_IMG
+		FROM
+			RESUME
+		WHERE
+			RE_NUM = #{ re_num }
+	</select>
+
+	<select id="KgetOfferList">
+	  SELECT 
+	    O.RE_NUM,
+	    O.OF_ID,
+	    O.OF_DATE,
+	    O.RESULT,
+	    R.USER_ID,
+	    U.USER_NAME,
+	    R.RE_TITLE,
+	    R.SKILL, 
+	    R.CAREER, 
+	    R.REGION,
+	    R.USER_EDU,
+	    R.USER_CAR,
+	    R.USER_INTRO,
+	    R.USER_IMG
+	FROM 
+	    OFFER O
+	    JOIN RESUME R ON O.RE_NUM = R.RE_NUM
+	    JOIN USERS U ON R.USER_ID = U.USER_ID
+	    JOIN POST P ON O.PO_NUM = P.PO_NUM
+	WHERE 
+	    P.COM_ID = #{arg4}
+	ORDER BY
+	    O.OF_ID ASC
+	</select>
+	<select id="LGetFilterResumes">
+	SELECT  
+		R.RE_NUM,
+		R.USER_ID,
+		R.RE_TITLE,
+		R.SKILL,
+		R.CAREER,
+		R.REGION,
+		R.USER_EDU,
+		R.USER_CAR,
+		R.USER_INTRO,
+		R.USER_IMG,
+		U.USER_ID,
+		U.USER_NAME,
+		U.USER_PW,
+		U.USER_TELL,
+		U.USER_BIRTH,
+		U.USER_ADR
+    FROM  
+      RESUME R
+    JOIN
+      USERS U
+    ON
+      R.USER_ID = U.USER_ID
+    LEFT JOIN
+      COMRATINGS CR
+    ON
+      R.USER_ID = CR.USER_ID
+    WHERE 
+        1=1
+        <if test="skill != null and skill != '' and skill != 'none'">
+            AND SKILL = #{skill}
+        </if>
+        <if test="career != null and career != '' and career != 'none'">
+            AND CAREER = #{career}
+        </if>
+        <if test="region != null and region != '' and region != 'none'">
+            AND REGION = #{region}
+        </if>
+	
+	</select>
+</mapper>
