@@ -11,6 +11,27 @@
 ●JQuery<br>
 
 
+
+## 프로젝트 발표 영상 
+https://www.youtube.com/watch?v=I6WoLsPOoYo
+
+## 프로젝트 시연 영상
+https://www.notion.so/f970b5444d2c419fbfbcd02cd2423cfb
+
+
+<h2>데이터베이스 설계</h2>
+![image](https://github.com/rikik99/Jik-Job/assets/106740152/eea25afd-4880-4dd6-9b91-89c63c44c9ef)
+
+<h2>테스트</h2>
+![image](https://github.com/rikik99/Jik-Job/assets/106740152/5c057f14-a23e-4eaa-9fb2-1e90247d0fed)
+
+<h2>GitHub</h2>
+●각각의 레파지토리 생성 후 합친 후 하나의 main branch 에 올림
+
+<h2>일정관리</h2>
+●평일에는 직접 만나서, 주말에는 카톡으로 연락을 주고 받으며 하루 마무리 하는 시간에 그날 각자의 진행상황을 파악하고 깃 통합
+
+
 <h2>모델링</h2>
 이충훈<br>
 ●화면 UI 설계<br>
@@ -65,16 +86,3 @@
 <br>
 ●화면 UI 설계<br>
 ●데이터 베이스 설계<br>
-
-<h2>데이터베이스 설계</h2>
-![image](https://github.com/rikik99/Jik-Job/assets/106740152/eea25afd-4880-4dd6-9b91-89c63c44c9ef)
-
-<h2>테스트</h2>
-![image](https://github.com/rikik99/Jik-Job/assets/106740152/5c057f14-a23e-4eaa-9fb2-1e90247d0fed)
-
-<h2>GitHub</h2>
-●각각의 레파지토리 생성 후 합친 후 하나의 main branch 에 올림
-
-<h2>일정관리</h2>
-●평일에는 직접 만나서, 주말에는 카톡으로 연락을 주고 받으며 하루 마무리 하는 시간에 그날 각자의 진행상황을 파악하고 깃 통합
-
